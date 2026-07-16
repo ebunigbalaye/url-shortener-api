@@ -1,0 +1,2 @@
+"""SQLAlchemy ORM model(s) — this is your urls table definition: id, original_url, slug, created_at, expires_at, click_count. 
+This defines the actual database schema, separate from what the API exposes."""

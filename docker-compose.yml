@@ -1,0 +1,2 @@
+#Defines your FastAPI service + Postgres service running together,
+# so docker-compose up gives you a fully working local environment with zero manual setup.
