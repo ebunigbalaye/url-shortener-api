@@ -1,2 +1,17 @@
 #Defines your FastAPI service + Postgres service running together,
 # so docker-compose up gives you a fully working local environment with zero manual setup.
+#Dockerfile = How do I build one image?
+#docker-compose.yml = How do I run one or more containers together?
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: URL_Shortener
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    
