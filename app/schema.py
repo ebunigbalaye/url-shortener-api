@@ -8,14 +8,19 @@ from pydantic import  BaseModel
 class CreateSchema(BaseModel):
     original_url: str               
 
-class ResponseSchema(BaseModel):
+class URLResponseSchema(BaseModel):
     id: int                      # Required field
     slug: str                # Required field
     original_url: str            # Required field
     created_at: datetime.datetime  # Required field
 
-class StatsSchema(BaseModel):
+class URLStatsSchema(BaseModel):
     slug: str                # Required field
     click_count: int              # Required field
     created_at: datetime.datetime  # Required field
-    expires_at: Optional[datetime.datetime] = None  # Optional field
+    expires_at: datetime.datetime # Optional field
+
+
+class PaginatedURLResponse(BaseModel):
+    items: list[URLResponseSchema]
+    next_cursor: int | None
