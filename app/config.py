@@ -12,3 +12,4 @@ dbname=os.getenv("DB_NAME")
 user=os.getenv("DB_USER")
 password=os.getenv("DB_PASSWORD")
 DATABASE_URL = (f"postgresql+psycopg://{user}:{password}@{host}:{port}/{dbname}")
+print(f"Database URL: {DATABASE_URL}")  # Debugging line to check the constructed URL

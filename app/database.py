@@ -3,15 +3,18 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.config import DATABASE_URL
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(
     bind=engine,
     autoflush=False,       # Prevents automatic flushing before queries
-    expire_on_commit=False) # Keeps data accessible on objects after commit
+    expire_on_commit=False) # Keeps data accessible on objects after commitsss
 
 
 def get_session():
