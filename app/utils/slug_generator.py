@@ -4,9 +4,8 @@ Keeping it separate means you can swap strategies without touching routes or CRU
 import hashlib
 import secrets
 from sqlalchemy import Sequence
-from app.database import SessionLocal
-import pybase62
-
+from sqlalchemy.orm import Session
+import base62
 
 
 # functions for generating a truncated hash for the slug
@@ -24,12 +23,9 @@ def generate_sha256_slug(original_url: str) -> str:
     return hash.hexdigest()[:slug_length]
 
 #function to generate slug by converting the database id to base 62
-def generate_base62_slug():
-    with SessionLocal() as session:
-        next_id = session.execute(Sequence("urls_id_seq")).scalar()
-         # 1. Encoding the database ID
-        slug = pybase62.encode(next_id)
-        return slug
-
+def generate_base62_slug(database_session: Session) -> tuple[int, str]:
+    next_id = database_session.execute(Sequence("urls_id_seq"))
+    slug = base62.encode(next_id)
+    return next_id, slug
 
 

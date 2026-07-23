@@ -52,3 +52,33 @@ Without it, your table grows forever and you're serving redirects for links nobo
 
 My takeaway:
 A user visits my website with a unique url that has a unique ID(slug) at the tail, i fund their website using that slug and return it to them.
+
+
+## Known Issues / Technical Debt
+
+### `expires_at` column type (VARCHAR instead of TIMESTAMP)
+
+While building out the routes, a migration issue led to converting the
+`expires_at` column from a timestamp type to `VARCHAR`. This was a
+reactive fix to unblock a migration error rather than a deliberate
+design choice, and it comes with real tradeoffs:
+
+- **What still works:** existing values remain valid ISO 8601 strings,
+  and reading/writing expiry dates through the API continues to work
+  as long as the format stays consistent.
+- **What's broken as a result:** SQL-level date comparisons
+  (e.g. `WHERE expires_at < NOW()`) won't work correctly against a
+  string column. Sorting by expiry date isn't guaranteed to match
+  chronological order. Schema-level validation of the field is weaker,
+  since Pydantic can't enforce "this must be a real datetime" as
+  strictly against a string-backed column.
+- **What this blocks going forward:** any feature involving expiry
+  logic — auto-deleting expired links, filtering "active" vs.
+  "expired" URLs, sorting by expiry — will require fixing this first.
+  The correct fix is a new Alembic migration that casts the column
+  back to `TIMESTAMP WITH TIME ZONE` using an explicit `USING`
+  clause, handling existing NULL values gracefully.
+
+This is being left as-is for now since Project 1 doesn't currently
+implement expiry-based logic, but it's flagged here as debt to
+revisit before any such feature is built.

@@ -2,7 +2,8 @@
 This defines the actual database schema, separate from what the API exposes."""
 
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String,DateTime, func
+from datetime import datetime
 
 class Base(DeclarativeBase):
     pass
@@ -14,7 +15,7 @@ class URL(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     slug: Mapped[str] = mapped_column(String(10), unique=True, index=True)
     original_url: Mapped[str] = mapped_column(String)
-    created_at: Mapped[str] = mapped_column(String, default="now()")
-    expires_at: Mapped[str] = mapped_column(String, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True),server_default=func.now())
+    expires_at: Mapped[datetime | None] = mapped_column( DateTime(timezone=True), nullable=True)
     click_count: Mapped[int] = mapped_column(Integer, default=0)
 
